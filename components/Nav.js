@@ -3,30 +3,36 @@ import NavStyles from './styles/NavStyles';
 import User from './User';
 
 const Nav = () => (
-    <NavStyles>
-        <User>
-            {({ data: { me } }) => {
-                console.log(me);
-                if (me) return <p>{me.name}</p>;
-                return null;
-            }}
-        </User>
-        <Link href="/items">
-            <a>Shop</a>
-        </Link>
-        <Link href="/sell">
-            <a>Sell</a>
-        </Link>
-        <Link href="/signup">
-            <a>Sign Up</a>
-        </Link>
-        <Link href="orders">
-            <a>Orders</a>
-        </Link>
-        <Link href="/me">
-            <a>Account</a>
-        </Link>
-    </NavStyles>
-)
+    <User>
+      {({ data: { me } }) => (
+          <NavStyles>
+            <Link href="/items">
+                <a>Shop</a>
+            </Link>
+            {me && (
+                <>
+                    <Link href="/sell">
+                        <a>Sell</a>
+                    </Link>
+                    <Link href="/orders">
+                        <a>Orders</a>
+                    </Link>
+                    <Link href="/me">
+                        <a>Account</a>
+                    </Link>
+                </>
+            )}
+            {!me && (
+                <Link href="/signup">
+                    <a>Sign In</a>
+                </Link>
+            )}
+          </NavStyles>
+      )}
+    </User>
+
+);
 
 export default Nav;
+
+// the empty jxs brackets are called a react fragment, which is a new way to wrap adjacent jsx elements without having to use a div and that is AWESOME 
