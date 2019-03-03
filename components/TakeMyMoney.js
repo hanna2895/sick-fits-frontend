@@ -28,45 +28,48 @@ function totalItems(cart) {
 }
 
 class TakeMyMoney extends React.Component {
-    onToken = (res, createOrder) => {
+    onToken = async (res, createOrder) => {
         console.log(res.id);
         console.log('On Token called')
         // manually call the mutation once we have the stripe token
-        createOrder({
+        const order = await createOrder({
             variables: {
                 token: res.id
             }
         }).catch(err => {
             alert(err.message);
         })
+        console.log(order);
     }
 
     render() {
         return (
-            <User>
-                {({ data: { me }}) => (
-                    <Mutation mutation={CREATE_ORDER_MUTATION} 
-                        refetchQueries={[{ query: CURRENT_USER_QUERY }]}
-                    >
-                        {(createOrder) => (
-                            <StripeCheckout
-                                amount={calcTotalPrice(me.cart)}
-                                name="Sick Fits"
-                                description={`Order of ${totalItems(me.cart)} items`}
-                                image={me.cart[0].item && me.cart[0].item.image}
-                                stripeKey="pk_test_KrjW2Y5vsZbD5FFxz7rGNI3k"
-                                currency="USD"
-                                email={me.email}
-                                token={res => this.onToken(res, createOrder)}
-                            >
-                                {this.props.children}
-                            </StripeCheckout>
-                        )}
-                    </Mutation>
+          <User>
+            {({ data: { me } }) => (
+              <Mutation
+                mutation={CREATE_ORDER_MUTATION}
+                refetchQueries={[{ query: CURRENT_USER_QUERY }]}
+              >
+                {createOrder => (
+                  <StripeCheckout
+                    amount={calcTotalPrice(me.cart)}
+                    name="Sick Fits"
+                    description={`Order of ${totalItems(me.cart)} items!`}
+                    image={me.cart.length && me.cart[0].item && me.cart[0].item.image}
+                    stripeKey="pk_test_KrjW2Y5vsZbD5FFxz7rGNI3k"
+                    currency="USD"
+                    email={me.email}
+                    token={res => this.onToken(res, createOrder)}
+                  >
+                    {this.props.children}
+                  </StripeCheckout>
                 )}
-            </User>
-        )
-    }
+              </Mutation>
+            )}
+          </User>
+        );
+      }
 }
 
 export default TakeMyMoney;
+
