@@ -42,10 +42,8 @@ class Order extends React.Component {
                     if (error) return <Error error={error} />
                     if (loading) return <p>Loading...</p>
                     const order = data.order;
-                    console.log(order)
-                    // console.log(format(order.createdAt, 'MMM d, YYYY h:mm'))
                     return (
-                        <OrderStyles>
+                        <OrderStyles data-test="order">
                             <Head>
                                 <title>Sick Fits - Order {order.id}</title>
                             </Head>
@@ -93,3 +91,5 @@ class Order extends React.Component {
 
 
 export default Order;
+
+export { SINGLE_ORDER_QUERY };
